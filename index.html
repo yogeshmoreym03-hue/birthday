@@ -1,427 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday, My Special One! ✨</title>
-    <style>
-        /* ==========================================
-           1. Global Resets & Theme Setup
-           ========================================== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', 'Segoe UI', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
 
-        body, html {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: radial-gradient(circle at center, #1a0b2e 0%, #05010a 100%);
-            color: #fff;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        /* Screen Wrapper Setup */
-        .screen {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 10;
-        }
+<title>Happy Birthday Shravani ❤️</title>
 
-        .screen.active {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateX(0);
-        }
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-        /* Slide mechanics for transitions */
-        .screen.upcoming {
-            transform: translateX(100%);
-        }
+<!-- Font Awesome -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
 
-        .screen.past {
-            transform: translateX(-100%);
-        }
+<link rel="stylesheet" href="style.css">
 
-        /* ==========================================
-           2. Reusable Component Styling
-           ========================================== */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 30px 20px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            transform-style: preserve-3d;
-            perspective: 1000px;
-        }
-
-        .title-glow {
-            font-size: 2.2rem;
-            font-weight: 700;
-            background: linear-gradient(45deg, #ff758c, #ff7eb3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .subtitle {
-            color: #d1c4e9;
-            font-size: 1.1rem;
-            font-weight: 300;
-            margin-bottom: 25px;
-        }
-
-        .action-btn {
-            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
-            border: none;
-            color: white;
-            padding: 12px 35px;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255, 117, 140, 0.4);
-            transition: all 0.3s ease;
-            margin-top: 15px;
-        }
-
-        .action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 117, 140, 0.6);
-        }
-
-        /* Hint messages on interactions */
-        .hint-text {
-            font-size: 0.85rem;
-            color: #cca4ff;
-            margin-top: 15px;
-            letter-spacing: 1px;
-            animation: pulse 1.5s infinite alternate;
-        }
-
-        /* Ambient floating particles backdrop */
-        #particle-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        /* ==========================================
-           3. Screen 1: Welcome & Intro
-           ========================================== */
-        .heart-icon {
-            font-size: 4rem;
-            color: #ff758c;
-            animation: beat 1.2s infinite;
-            margin-bottom: 15px;
-            display: inline-block;
-        }
-
-        /* ==========================================
-           4. Screen 2: Interactive Memory Gallery
-           ========================================== */
-        .gallery-container {
-            width: 100%;
-            max-width: 400px;
-            height: 450px;
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .memory-card {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: #25163a;
-            border: 6px solid #fff;
-            border-bottom: 45px solid #fff;
-            border-radius: 4px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            cursor: grab;
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform-origin: center bottom;
-        }
-
-        .memory-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            pointer-events: none;
-        }
-
-        .memory-card .caption {
-            position: absolute;
-            bottom: -38px;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            color: #333;
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        /* Layered stacking effect for Polaroid layout */
-        .card-1 { transform: rotate(-4deg) translateZ(0); z-index: 4; }
-        .card-2 { transform: rotate(3deg) scale(0.98) translateY(5px); z-index: 3; }
-        .card-3 { transform: rotate(-2deg) scale(0.96) translateY(10px); z-index: 2; }
-        .card-4 { transform: rotate(5deg) scale(0.94) translateY(15px); z-index: 1; }
-
-        /* ==========================================
-           5. Screen 3: The 3D CSS Interactive Cake
-           ========================================== */
-        .scene-3d {
-            width: 200px;
-            height: 240px;
-            perspective: 600px;
-            margin: 20px auto;
-        }
-
-        .cake-container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transform: rotateX(20deg) rotateY(0deg);
-            transition: transform 0.5s ease;
-            animation: slowSpin 12s linear infinite;
-        }
-
-        /* Universal positioning structural logic for layers */
-        .cake-layer {
-            position: absolute;
-            left: 50%;
-            transform-style: preserve-3d;
-            border-radius: 50%;
-        }
-
-        /* Lower Base layer styling rules */
-        .layer-bottom {
-            width: 180px;
-            height: 180px;
-            bottom: 20px;
-            margin-left: -90px;
-            background: #6d4c41; /* Chocolate Base */
-            border: 4px solid #f48fb1; /* Pink frosting trim border line */
-            transform: rotateX(90deg) translateZ(0px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
-
-        /* Top upper Tier layer styling rules */
-        .layer-top {
-            width: 130px;
-            height: 130px;
-            bottom: 70px;
-            margin-left: -65px;
-            background: #f48fb1; /* Strawberry layer */
-            border: 3px solid #fff;
-            transform: rotateX(90deg) translateZ(0px);
-        }
-
-        /* Interactive Candle CSS asset setup */
-        .candle {
-            position: absolute;
-            width: 10px;
-            height: 45px;
-            background: linear-gradient(to right, #e0f7fa, #80deea);
-            bottom: 105px;
-            left: 50%;
-            margin-left: -5px;
-            transform-style: preserve-3d;
-            z-index: 20;
-        }
-
-        .flame {
-            position: absolute;
-            width: 14px;
-            height: 20px;
-            background: radial-gradient(ellipse at bottom, #ffeb3b 0%, #ff5722 100%);
-            border-radius: 50% 50% 20% 20%;
-            top: -18px;
-            left: 50%;
-            margin-left: -7px;
-            box-shadow: 0 0 15px #ff9800, 0 0 25px #ff5722;
-            animation: flicker 0.6s infinite alternate;
-            transition: opacity 0.4s ease;
-        }
-
-        /* Knife state graphic indicators */
-        .knife-guide {
-            border: 2px dashed #ff758c;
-            width: 140px;
-            height: 4px;
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translateX(-50%);
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .cake-container.candles-blown .knife-guide {
-            opacity: 0.7;
-        }
-
-        /* Visual cuts layer split states */
-        .cake-container.cut .layer-top {
-            background: linear-gradient(90deg, #f48fb1 45%, rgba(0,0,0,0) 46%, rgba(0,0,0,0) 54%, #f48fb1 55%);
-            border-color: transparent;
-        }
-        .cake-container.cut .layer-bottom {
-            background: linear-gradient(90deg, #6d4c41 45%, rgba(0,0,0,0) 46%, rgba(0,0,0,0) 54%, #6d4c41 55%);
-            border-color: transparent;
-        }
-
-        /* ==========================================
-           6. Screen 4: Heart-touching Message Letter
-           ========================================== */
-        .letter-box {
-            background: #fffdf7;
-            color: #2c1a4d;
-            padding: 30px 25px;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 380px;
-            box-shadow: inset 0 0 40px rgba(224,190,120,0.2), 0 15px 30px rgba(0,0,0,0.5);
-            text-align: left;
-            line-height: 1.8;
-            font-size: 0.98rem;
-            position: relative;
-            transform: rotate(-1deg);
-        }
-
-        .letter-box p {
-            margin-bottom: 15px;
-            font-family: 'Georgia', serif;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.6s ease;
-        }
-
-        .letter-box.reveal p {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .signature {
-            text-align: right;
-            font-weight: bold;
-            color: #ff758c;
-            font-size: 1.1rem;
-            margin-top: 20px;
-        }
-
-        /* ==========================================
-           7. Keyframe Mechanics Definitions
-           ========================================== */
-        @keyframes beat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-        }
-        @keyframes pulse {
-            0% { opacity: 0.5; transform: scale(0.98); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-        @keyframes flicker {
-            0% { transform: scale(1) rotate(-1deg); opacity: 0.9; }
-            100% { transform: scale(1.1) rotate(1.5deg); opacity: 1; }
-        }
-        @keyframes slowSpin {
-            0% { transform: rotateX(20deg) rotateY(0deg); }
-            100% { transform: rotateX(20deg) rotateY(360deg); }
-        }
-    </style>
 </head>
+
 <body>
 
-    <canvas id="particle-canvas"></canvas>
+<!-- ================= LOADER ================= -->
 
-    <section class="screen active" id="scr-1">
-        <div class="glass-panel">
-            <div class="heart-icon">❤️</div>
-            <h1 class="title-glow">A Special Surprise</h1>
-            <p class="subtitle">I have created something beautiful for your special day.</p>
-            <button class="action-btn" onclick="navigateTo(2)">Enter Experience</button>
-        </div>
-    </section>
+<div id="loader">
 
-    <section class="screen upcoming" id="scr-2">
-        <h2 class="title-glow" style="margin-bottom: 20px; font-size: 1.6rem;">Our Beautiful Memories</h2>
-        <div class="gallery-container" id="gallery">
-            
-            <div class="memory-card card-1">
-                <img src="Snapchat-1070221380.jpg" alt="Memory One">
-                <div class="caption">Cutest Smiles ✨</div>
-            </div>
+<div class="loader-heart">
+<i class="fa-solid fa-heart"></i>
+</div>
 
-            <div class="memory-card card-2">
-                <img src="IMG_20260502_164714.jpg" alt="Memory Two">
-                <div class="caption">Warmest Comfort ❤️</div>
-            </div>
+<h2>Loading Love...</h2>
 
-            <div class="memory-card card-3">
-                <img src="IMG_20250905_152529 (1).jpg" alt="Memory Three">
-                <div class="caption">Blessed Moments 🙏</div>
-            </div>
+</div>
 
-            <div class="memory-card card-4">
-                <img src="IMG_20250906_144650 (1) (1).jpg" alt="Memory Four">
-                <div class="caption">Every Second with You 💫</div>
-            </div>
+<!-- ================= BACKGROUND ================= -->
 
-        </div>
-        <p class="hint-text" id="gallery-hint">👉 Swipe or drag cards away to reveal layers</p>
-        <button class="action-btn" id="gallery-next-btn" style="display:none;" onclick="navigateTo(3)">Make a Wish Next</button>
-    </section>
+<div class="background-overlay"></div>
 
-    <section class="screen upcoming" id="scr-3">
-        <div class="glass-panel">
-            <h2 class="title-glow" id="cake-instruction">Blow the Candle 💨</h2>
-            <p class="subtitle" id="cake-sub-instruction">Tap or click close to the flame to blow it out.</p>
+<div id="particles"></div>
 
-            <div class="scene-3d">
-                <div class="cake-container" id="interactive-cake">
-                    <div class="candle">
-                        <div class="flame" id="main-flame" onclick="blowCandle()"></div>
-                    </div>
-                    <div class="cake-layer layer-top"></div>
-                    <div class="cake-layer layer-bottom"></div>
-                    <div class="knife-guide"></div>
-                </div>
-            </div>
+<!-- ================= NAVBAR ================= -->
 
-            <p class="hint-text" id="interaction-hint">Waiting for your breath...</p>
-        </div>
-    </section>
+<header>
 
-    <section class="screen upcoming" id="scr-4">
-        <h2 class="title-glow" style="font-size: 1.6rem; margin-bottom: 15px;">To My Absolute Favorite Person</h2>
-        <div class="letter-box" id="final-letter">
-            <p style="transition-delay: 0.2s;">Happy Birthday to the most incredible person in my entire life.</p>
-            <p style="transition-delay: 1.0s;">Looking back at our pictures, from
+<div class="logo">
+
+Yogesh <span>❤</span> Shravani
+
+</div>
+
+<nav>
+
+<a href="#home">Home</a>
+
+<a href="#letter">Letter</a>
+
+<a href="#timeline">Journey</a>
+
+<a href="#gallery">Gallery</a>
+
+<a href="#surprise">Surprise</a>
+
+</nav>
+
+<div class="music-btn">
+
+<i class="fa-solid fa-music"></i>
+
+</div>
+
+</header>
+
+<!-- ================= HERO ================= -->
+
+<section id="home">
+
+<div class="hero-image">
+
+<!-- Replace hero.jpg with your uploaded photo -->
+<img src="assets/images/hero.jpg" alt="Couple">
+
+</div>
+
+<div class="hero-overlay"></div>
+
+<div class="hero-content">
+
+<h3>Happy Birthday</h3>
+
+<h1>Shravani ❤️</h1>
+
+<p>
+
+You are the most beautiful chapter of my life.
+
+Every smile of yours is my favorite memory.
+
+Every moment with you is my greatest blessing.
+
+</p>
+
+<a href="#letter" class="hero-btn">
+
+Open My Heart
+
+<i class="fa-solid fa-heart"></i>
+
+</a>
+
+</div>
+
+<div class="scroll-indicator">
+
+<i class="fa-solid fa-angles-down"></i>
+
+</div>
+
+</section>
+
+<!-- ================= LOVE LETTER ================= -->
+
+<section id="letter">
+
+<div class="glass-card">
+
+<h2>Dear Shravani ❤️</h2>
+
+<p class="typing">
+
+You came into my life unexpectedly,
+
+but now I cannot imagine a single day without you.
+
+Thank you for making every ordinary moment
+
+feel extraordinary.
+
+Happy Birthday My Love.
+
+May your smile always shine brighter
+
+than the stars.
+
+I love you today,
+
+tomorrow,
+
+and forever.
+
+❤️
+
+— Yogesh
+
+</p>
+
+</div>
+
+</section>
+
+<!-- ================= TIMELINE ================= -->
+
+<section id="timeline">
+
+<h2>Our Beautiful Journey</h2>
+
+<div class="timeline">
+
+<div class="card">
+<div class="circle"></div>
+<h3>First Chat</h3>
+<p>Where everything started ❤️</p>
+</div>
+
+<div class="card">
+<div class="circle"></div>
+<h3>First Call</h3>
+<p>Your voice became my favorite sound.</p>
+</div>
+
+<div class="card">
+<div class="circle"></div>
+<h3>First Meet</h3>
+<p>The day my world changed.</p>
+</div>
+
+<div class="card">
+<div class="circle"></div>
+<h3>Today</h3>
+<p>Celebrating your special day ❤️</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= GALLERY ================= -->
+
+<section id="gallery">
+
+<h2>Our Memories</h2>
+
+<div class="gallery">
+
+<img src="assets/images/gallery1.jpg">
+
+<img src="assets/images/gallery2.jpg">
+
+<img src="assets/images/gallery3.jpg">
+
+<img src="assets/images/gallery4.jpg">
+
+<img src="assets/images/gallery5.jpg">
+
+<img src="assets/images/gallery6.jpg">
+
+</div>
+
+</section>
+
+<!-- ================= SURPRISE ================= -->
+
+<section id="surprise">
+
+<h2>One Last Surprise ❤️</h2>
+
+<button id="surpriseBtn">
+
+Click Here
+
+</button>
+
+<div id="hiddenMessage">
+
+<h1>
+
+I Will Always Choose You
+
+❤️
+
+Happy Birthday My Love ❤️
+
+</h1>
+
+</div>
+
+</section>
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+Made with ❤️ by Yogesh
+
+</footer>
+
+<!-- Floating Hearts -->
+
+<div class="hearts"></div>
+
+<!-- Rose Petals -->
+
+<div class="petals"></div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
